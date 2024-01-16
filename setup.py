@@ -8,7 +8,7 @@ except:
 
 setuptools.setup(
     name="aquanta",
-    version="0.1",
+    version="0.2",
     author="Jeremy Compostella",
     description="Unofficial library to interact with Aquanta water heater smart controller.",
     long_description=long_description,
