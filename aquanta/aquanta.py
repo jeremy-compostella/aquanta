@@ -36,10 +36,12 @@ class AquantaHelper:
     def __init__(self, session, timeout):
         self._session = session
         self._timeout = timeout
+        self.headers = {}
 
     def get(self, path):
         """GET HTTP request for aquanta.io PATH."""
-        resp = self._session.get(self.API_BASE + path, timeout=self._timeout)
+        resp = self._session.get(self.API_BASE + path, timeout=self._timeout,
+                                 headers=self.headers)
         if resp.ok:
             return resp.json()
         raise RuntimeError('Aquanta: Failed to GET %s, %s' % (path, resp))
@@ -47,14 +49,15 @@ class AquantaHelper:
     def put(self, path, value):
         """PUT HTTP request for aquanta.io PATH."""
         resp = self._session.put(self.API_BASE + path, json=value,
-                                 timeout=self._timeout)
+                                 timeout=self._timeout, headers=self.headers)
         if not resp.ok:
             raise RuntimeError('Aquanta: Failed to PUT %s' % path)
 
     def delete(self, path):
         """DELETE HTTP request for aquanta.io PATH."""
         resp = self._session.delete(self.API_BASE + path,
-                                 timeout=self._timeout)
+                                    timeout=self._timeout,
+                                    headers=self.headers)
         if not resp.ok:
             raise RuntimeError('Aquanta: Failed to DELETE %s' % path)
 
@@ -86,11 +89,9 @@ class Aquanta():
                                   timeout=self._timeout)
         if not resp.ok:
             raise RuntimeError('Aquanta: Password verification failed')
-        resp = self._session.post(self.PORTAL_BASE + '/login',
-                                  json=dict(idToken=resp.json()['idToken']),
-                                  timeout=self._timeout)
-        if not resp.ok:
-            raise RuntimeError('Aquanta: login failed')
+
+        data = self._helper.get('/auth?idtoken=' + resp.json()['idToken'])
+        self._helper.headers = {'Authorization': f'Bearer {data["apiKey"]}'}
 
     def devices(self):
         """Return the list of AquantaDevice of this account."""
