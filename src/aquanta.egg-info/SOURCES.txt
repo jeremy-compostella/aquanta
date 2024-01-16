@@ -1,0 +1,10 @@
+COPYING
+README.md
+setup.py
+src/aquanta/__init__.py
+src/aquanta/aquanta.py
+src/aquanta.egg-info/PKG-INFO
+src/aquanta.egg-info/SOURCES.txt
+src/aquanta.egg-info/dependency_links.txt
+src/aquanta.egg-info/requires.txt
+src/aquanta.egg-info/top_level.txt
